@@ -1,9 +1,12 @@
 package main
 
 import (
+	"log"
 	"net/http"
+	"os"
 	"strconv"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -15,11 +18,24 @@ const (
 
 func main() {
 	router := mux.NewRouter()
-	router.Handle("/", GetRequestHandler).Methods("GET")
-	router.Handle("/post", PostRequestHandler).Methods("POST")
+
+	//console logs
+	router.Handle("/", handlers.LoggingHandler(os.Stdout,
+		http.HandlerFunc(GetRequestHandler))).Methods("GET")
+
+	//file logs
+	logFile, err := os.OpenFile("server.log", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+
+	if err != nil {
+		log.Fatal("error starting http server : ", err)
+		return
+	}
+
+	router.Handle("/post", handlers.LoggingHandler(logFile, PostRequestHandler)).Methods("POST")
 	router.Handle("/hello/{name}",
-		PathVariableHandler).Methods("GET", "PUT")
-	router.Handle("/add/{num1}/{num2}", AddNumberHandler)
+		handlers.LoggingHandler(logFile, PathVariableHandler)).Methods("GET", "PUT")
+	router.Handle("/add/{num1}/{num2}", handlers.LoggingHandler(logFile, AddNumberHandler))
+
 	http.ListenAndServe(ServerHost+":"+ServerPort, router)
 }
 
