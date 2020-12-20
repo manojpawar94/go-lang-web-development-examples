@@ -19,11 +19,11 @@ const (
 func main() {
 	router := mux.NewRouter()
 
-	//console logs
+	//console based logging
 	router.Handle("/", handlers.LoggingHandler(os.Stdout,
 		http.HandlerFunc(GetRequestHandler))).Methods("GET")
 
-	//file logs
+	//file based logging
 	logFile, err := os.OpenFile("server.log", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 
 	if err != nil {
@@ -34,7 +34,9 @@ func main() {
 	router.Handle("/post", handlers.LoggingHandler(logFile, PostRequestHandler)).Methods("POST")
 	router.Handle("/hello/{name}",
 		handlers.LoggingHandler(logFile, PathVariableHandler)).Methods("GET", "PUT")
-	router.Handle("/add/{num1}/{num2}", handlers.LoggingHandler(logFile, AddNumberHandler))
+
+	//without logging
+	router.HandleFunc("/add/{num1}/{num2}", AddNumberHandler)
 
 	http.ListenAndServe(ServerHost+":"+ServerPort, router)
 }
@@ -59,14 +61,13 @@ var PathVariableHandler = http.HandlerFunc(
 	})
 
 //AddNumberHandler handler
-var AddNumberHandler = http.HandlerFunc(
-	func(w http.ResponseWriter, r *http.Request) {
-		num1, err := strconv.Atoi(mux.Vars(r)["num1"])
-		num2, err := strconv.Atoi(mux.Vars(r)["num2"])
+func AddNumberHandler(w http.ResponseWriter, r *http.Request) {
+	num1, err := strconv.Atoi(mux.Vars(r)["num1"])
+	num2, err := strconv.Atoi(mux.Vars(r)["num2"])
 
-		if err != nil {
-			w.Write([]byte("Invalid request " + err.Error()))
-		}
-		result := num1 + num2
-		w.Write([]byte("Result: " + strconv.Itoa(result)))
-	})
+	if err != nil {
+		w.Write([]byte("Invalid request " + err.Error()))
+	}
+	result := num1 + num2
+	w.Write([]byte("Result: " + strconv.Itoa(result)))
+}
