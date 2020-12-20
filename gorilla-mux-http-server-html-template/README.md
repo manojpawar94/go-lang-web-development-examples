@@ -11,3 +11,10 @@ Go's html/template package.
 While designing web applications, it’s always a best practice to serve static resources, such as .js, .css, and images from the filesystem, or any content delivery network (CDN), such as Akamai or Amazon CloudFront, rather than serving it from the web server. This is because all these types of files are static and do not need to be processed; so why should we put extra load on the server? Moreover, it helps to boost application performance, as all the requests for the static files will be served from external sources and therefore reduce the load on the server.
 
 Go's net/http package is sufficient enough for serving static resources from the filesystem through FileServer.
+
+## Screenshots
+1. Index Page
+![alt text](https://github.com/manojpawar94/go-web-app-examples/tree/main/gorilla-mux-http-server-html-template/screenshot/index_page.html)
+
+2. Login Page
+![alt text](https://github.com/manojpawar94/go-web-app-examples/tree/main/gorilla-mux-http-server-html-template/screenshot/login_page.html)
