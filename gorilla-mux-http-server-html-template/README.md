@@ -14,9 +14,9 @@ Go's net/http package is sufficient enough for serving static resources from the
 
 ## Screenshots
 1. Index Page
-<br>
+<br/>
 ![Image of Index](https://github.com/manojpawar94/go-web-app-examples/blob/main/gorilla-mux-http-server-html-template/screenshot/index_page.png?raw=true)
 
 2. Login Page
-<br>
+<br/>
 ![Image of Login](https://github.com/manojpawar94/go-web-app-examples/blob/main/gorilla-mux-http-server-html-template/screenshot/login_page.png?raw=true)
